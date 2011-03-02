@@ -87,7 +87,21 @@ public class Importer
    {
       portalContainer = Utils.trimToNull(portalContainer);
       
-      Utils.initializeLogging(log4jFile, logLevel, importFile.getParentFile(), importFile.getName(), "import");
+      if (importFile == null)
+      {
+         String file = Utils.getUserInput("Import file", level);
+         importFile = new File(file);
+      }
+      if (!importFile.exists())
+      {
+         System.err.println("Cannot find file " + importFile);
+         System.exit(1);
+      }
+
+      File importDir = importFile.getParentFile();
+      if (importDir == null) importDir = new File(".");
+
+      Utils.initializeLogging(log4jFile, logLevel, importDir, importFile.getName(), "import");
    }
 
    public void doImport()
@@ -105,17 +119,6 @@ public class Importer
       {
          System.err.println("Unknown host name " + host + ". See log for more details.");
          log.error("Exception retrieving host " + host + " by name.", e);
-         System.exit(1);
-      }
-
-      if (importFile == null)
-      {
-         String file = Utils.getUserInput("Import file", level);
-         importFile = new File(file);
-      }
-      if (!importFile.exists())
-      {
-         System.err.println("Cannot find file " + importFile);
          System.exit(1);
       }
 
