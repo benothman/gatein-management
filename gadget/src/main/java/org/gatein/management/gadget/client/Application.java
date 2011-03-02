@@ -79,7 +79,7 @@ import java.util.List;
  * @version 1.0
  */
 @ModulePrefs(title = "Export/Import Tool", author = "Nabil Benothman", author_email = "nbenothm@redhat.com",
-description = "This gadget allows the administrator to export/import sites", scrolling= true, scaling=false)
+description = "This gadget allows the administrator to export/import sites", scrolling= true, scaling=true)
 @UseLongManifestName(true)
 @AllowHtmlQuirksMode(true)
 public class Application extends Gadget<UserPreferences>
