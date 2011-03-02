@@ -19,7 +19,6 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.gatein.management.gadget.client;
 
 import com.google.gwt.core.client.GWT;
@@ -80,13 +79,13 @@ import java.util.List;
  * @version 1.0
  */
 @ModulePrefs(title = "Export/Import Tool", author = "Nabil Benothman", author_email = "nbenothm@redhat.com",
-   description = "This gadget allows the administrator to export/import sites")
+description = "This gadget allows the administrator to export/import sites", scrolling= true, scaling=false)
 @UseLongManifestName(true)
 @AllowHtmlQuirksMode(true)
 public class Application extends Gadget<UserPreferences>
 {
-   private static final String SERVLET_CONTEXT_PATH = "/gatein-management-gadget/gwtgadget";
 
+   private static final String SERVLET_CONTEXT_PATH = "/gatein-management-gadget/gwtgadget";
    // asycn services to get requests from the server through ajax.
    private final GateInServiceAsync gtnService = GWT.create(GateInService.class);
    private static final String UPLOAD_ACTION_URL = SERVLET_CONTEXT_PATH + "/upload";
@@ -112,7 +111,7 @@ public class Application extends Gadget<UserPreferences>
       decoratedTabPanel.setAnimationEnabled(true);
       rootPanel.add(decoratedTabPanel, 10, 10);
       decoratedTabPanel.setSize("870px", "480px");
-
+       
       AbsolutePanel absolutePanel = new AbsolutePanel();
       absolutePanel.setSize("847px", "425px");
 
@@ -202,7 +201,7 @@ public class Application extends Gadget<UserPreferences>
    }
 
    public native String getPortalContainerName()/*-{
-      return parent.eXo.env.portal.context.substring(1); // remove leading '/'
+   return parent.eXo.env.portal.context.substring(1); // remove leading '/'
    }-*/;
 
    /**
@@ -331,7 +330,10 @@ public class Application extends Gadget<UserPreferences>
          }
       });
       // accept only zip files
-      uploader.setValidExtensions(new String[]{"zip"});
+      uploader.setValidExtensions(new String[]
+              {
+                 "zip"
+              });
       // You can add customized parameters to servlet call
       uploader.setServletPath(UPLOAD_ACTION_URL + "?pc=" + getPortalContainerName());
 
@@ -433,10 +435,9 @@ public class Application extends Gadget<UserPreferences>
                   if (node.isExportable())
                   {
                      exportBtn.setEnabled(true);
-                     Application.this.exportHref = DOWNLOAD_ACTION_URL + "?pc=" + getPortalContainerName() +
-                        "&ownerType=" + node.getType() + "&ownerId=" + node.getSiteName();
-                  }
-                  else
+                     Application.this.exportHref = DOWNLOAD_ACTION_URL + "?pc=" + getPortalContainerName()
+                             + "&ownerType=" + node.getType() + "&ownerId=" + node.getSiteName();
+                  } else
                   {
                      exportBtn.setEnabled(false);
                      Application.this.exportHref = "#";
@@ -576,11 +577,10 @@ public class Application extends Gadget<UserPreferences>
             if (node.isExportable())
             {
 
-               Application.this.exportHref = DOWNLOAD_ACTION_URL + "?pc=" + getPortalContainerName() +
-                        "&ownerType=" + node.getType() + "&ownerId=" + node.getSiteName();
+               Application.this.exportHref = DOWNLOAD_ACTION_URL + "?pc=" + getPortalContainerName()
+                       + "&ownerType=" + node.getType() + "&ownerId=" + node.getSiteName();
                Application.this.exportButton.setEnabled(true);
-            }
-            else
+            } else
             {
                Application.this.exportButton.setEnabled(false);
                Application.this.exportHref = "#";
@@ -619,29 +619,29 @@ public class Application extends Gadget<UserPreferences>
             if (target.getChildCount() == 0)
             {
                gtnService.updateItem(getPortalContainerName(), tn,
-                  new AsyncCallback<TreeNode>()
-                  {
+                       new AsyncCallback<TreeNode>()
+                       {
 
-                     public void onFailure(Throwable caught)
-                     {
-                        Window.alert("Fail to update the tree items <br />" + caught);
-                        Application.this.details.setHTML("Failed to load sub-tree");
-                     }
+                          public void onFailure(Throwable caught)
+                          {
+                             Window.alert("Fail to update the tree items <br />" + caught);
+                             Application.this.details.setHTML("Failed to load sub-tree");
+                          }
 
-                     public void onSuccess(TreeNode result)
-                     {
+                          public void onSuccess(TreeNode result)
+                          {
 
-                        for (TreeNode tnChild : result.getChildren())
-                        {
-                           TreeItem it = Application.this.createItem(tnChild);
-                           if (!tnChild.getChildren().isEmpty())
-                           {
-                              it.addItem(new PendingItem());
-                           }
-                           target.addItem(it);
-                        }
-                     }
-                  });
+                             for (TreeNode tnChild : result.getChildren())
+                             {
+                                TreeItem it = Application.this.createItem(tnChild);
+                                if (!tnChild.getChildren().isEmpty())
+                                {
+                                   it.addItem(new PendingItem());
+                                }
+                                target.addItem(it);
+                             }
+                          }
+                       });
             }
 
             target.setText(text);
